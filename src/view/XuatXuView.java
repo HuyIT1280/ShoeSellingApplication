@@ -567,8 +567,8 @@ public class XuatXuView extends javax.swing.JFrame {
     
     public void edit(){
         Integer id = (Integer) tblXuatXu.getValueAt(row, 0);
-        
         XuatXu xx = dao.selectById(id);
+        this.setForm(xx);
         
     }
 }
