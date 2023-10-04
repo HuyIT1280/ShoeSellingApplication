@@ -12,12 +12,12 @@ public class XuatXu {
 
     private Integer id;
     private String name;
-    private Boolean status;
+    private boolean status;
 
     public XuatXu() {
     }
 
-    public XuatXu(Integer id, String name, Boolean status) {
+    public XuatXu(Integer id, String name, boolean status) {
         this.id = id;
         this.name = name;
         this.status = status;
@@ -39,17 +39,16 @@ public class XuatXu {
         this.name = name;
     }
 
-    public Boolean getStatus() {
+    public boolean getStatus() {
         return status;
     }
 
-    public void setStatus(Boolean status) {
+    public void setStatus(boolean status) {
         this.status = status;
     }
 
-    @Override
-    public String toString() {
-        if (this.status == true) {
+    public String showStatu() {
+        if (status == true) {
             return "Đang hoạt động";
         }
         return "Ngừng bán";

@@ -49,7 +49,31 @@ public class XuatXuDao extends SellingApplication<XuatXu, Integer> {
     String selectAll = """
                        select * from XuatXu
                        """;
-    
+
+    String selectByKeyWord = """
+                       SELECT * 
+                       FROM 
+                       (
+                           SELECT * 
+                           FROM XuatXu
+                           WHERE Ten LIKE ?
+                       ) AS FilteredResults
+                       ORDER BY ID
+                       OFFSET ? ROWS FETCH NEXT ? ROWS ONLY;
+                       """;
+
+    String selectByStatus = """
+                       SELECT * 
+                       FROM 
+                       (
+                           SELECT * 
+                           FROM XuatXu
+                           WHERE TrangThai = ?
+                       ) AS FilteredResults
+                       ORDER BY ID
+                       OFFSET ? ROWS FETCH NEXT ? ROWS ONLY;
+                       """;
+
     @Override
     public void insert(XuatXu entity) {
         JdbcHelper.update(insert_sql,
@@ -59,7 +83,9 @@ public class XuatXuDao extends SellingApplication<XuatXu, Integer> {
     @Override
     public void update(XuatXu entity) {
         JdbcHelper.update(update_sql,
-                entity.getName(), entity.getStatus());
+                entity.getName(),
+                entity.getStatus(),
+                entity.getId());
     }
 
     @Override
@@ -96,10 +122,20 @@ public class XuatXuDao extends SellingApplication<XuatXu, Integer> {
     }
 
     public List<XuatXu> selectPaging(int page, int limit) {
-        return this.selectBySql(selectPaging, (page - 1)*limit, limit);
+        return this.selectBySql(selectPaging, (page - 1) * limit, limit);
     }
-    
-    public List<XuatXu> selectAll(){
+
+    public List<XuatXu> selectAll() {
         return this.selectBySql(selectAll);
+    }
+
+    public List<XuatXu> searchByKeyWord(String keyWord, int page, int limit) {
+        return this.selectBySql(selectByKeyWord,
+                "%" + keyWord + "%%", (page - 1) * limit, limit);
+    }
+
+    public List<XuatXu> searchByStatus(Boolean status, int page, int limit) {
+        return this.selectBySql(selectByStatus,
+                status, (page - 1) * limit, limit);
     }
 }

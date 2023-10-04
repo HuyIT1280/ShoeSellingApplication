@@ -4,8 +4,11 @@
  */
 package view;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import model.XuatXu;
 import service.XuatXuDao;
@@ -44,8 +47,8 @@ public class XuatXuView extends javax.swing.JFrame {
         jLabel4 = new javax.swing.JLabel();
         lblID = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
-        txtLoc = new javax.swing.JTextField();
         btnFilter = new javax.swing.JButton();
+        cbbFilterStatus = new javax.swing.JComboBox<>();
         jPanel5 = new javax.swing.JPanel();
         txtTimKiem = new javax.swing.JTextField();
         btnSearch = new javax.swing.JButton();
@@ -90,6 +93,11 @@ public class XuatXuView extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
+        tblXuatXu.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblXuatXuMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(tblXuatXu);
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
@@ -113,7 +121,6 @@ public class XuatXuView extends javax.swing.JFrame {
 
         lblID.setBackground(new java.awt.Color(255, 255, 255));
         lblID.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        lblID.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         lblID.setOpaque(true);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -140,11 +147,14 @@ public class XuatXuView extends javax.swing.JFrame {
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel4)
-                    .addComponent(lblID, javax.swing.GroupLayout.PREFERRED_SIZE, 17, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(10, 10, 10)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(12, 12, 12)
+                        .addComponent(jLabel4))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(lblID, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtXuatXu, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel2))
@@ -157,11 +167,16 @@ public class XuatXuView extends javax.swing.JFrame {
 
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Filter", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 12))); // NOI18N
 
-        txtLoc.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-
         btnFilter.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         btnFilter.setText("Filter");
         btnFilter.setBorder(javax.swing.BorderFactory.createEtchedBorder(javax.swing.border.EtchedBorder.RAISED));
+        btnFilter.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnFilterActionPerformed(evt);
+            }
+        });
+
+        cbbFilterStatus.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -169,8 +184,8 @@ public class XuatXuView extends javax.swing.JFrame {
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(txtLoc, javax.swing.GroupLayout.PREFERRED_SIZE, 218, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 31, Short.MAX_VALUE)
+                .addComponent(cbbFilterStatus, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 29, Short.MAX_VALUE)
                 .addComponent(btnFilter, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
@@ -179,7 +194,7 @@ public class XuatXuView extends javax.swing.JFrame {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnFilter, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtLoc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(cbbFilterStatus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -190,6 +205,11 @@ public class XuatXuView extends javax.swing.JFrame {
         btnSearch.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         btnSearch.setText("Search");
         btnSearch.setBorder(javax.swing.BorderFactory.createEtchedBorder(javax.swing.border.EtchedBorder.RAISED));
+        btnSearch.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSearchActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
@@ -215,15 +235,35 @@ public class XuatXuView extends javax.swing.JFrame {
 
         btnAdd.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         btnAdd.setText("Add");
+        btnAdd.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAddActionPerformed(evt);
+            }
+        });
 
         btnUpdate.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         btnUpdate.setText("Update");
+        btnUpdate.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnUpdateActionPerformed(evt);
+            }
+        });
 
         btnDelete.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         btnDelete.setText("Delete");
+        btnDelete.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDeleteActionPerformed(evt);
+            }
+        });
 
         btnNew.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         btnNew.setText("New");
+        btnNew.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnNewActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
@@ -402,6 +442,42 @@ public class XuatXuView extends javax.swing.JFrame {
         this.lastPage();
     }//GEN-LAST:event_btnLastActionPerformed
 
+    private void tblXuatXuMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblXuatXuMouseClicked
+        // TODO add your handling code here:
+        this.row = tblXuatXu.getSelectedRow();
+        this.edit();
+    }//GEN-LAST:event_tblXuatXuMouseClicked
+
+    private void btnNewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNewActionPerformed
+        // TODO add your handling code here:
+        this.clearForm();
+    }//GEN-LAST:event_btnNewActionPerformed
+
+    private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
+        // TODO add your handling code here:
+        this.insert();
+    }//GEN-LAST:event_btnAddActionPerformed
+
+    private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateActionPerformed
+        // TODO add your handling code here:
+        this.update();
+    }//GEN-LAST:event_btnUpdateActionPerformed
+
+    private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
+        // TODO add your handling code here:
+        this.delete();
+    }//GEN-LAST:event_btnDeleteActionPerformed
+
+    private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchActionPerformed
+        // TODO add your handling code here:
+        this.search();
+    }//GEN-LAST:event_btnSearchActionPerformed
+
+    private void btnFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFilterActionPerformed
+        // TODO add your handling code here:
+        this.filter();
+    }//GEN-LAST:event_btnFilterActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -451,6 +527,7 @@ public class XuatXuView extends javax.swing.JFrame {
     private javax.swing.JButton btnNext;
     private javax.swing.JButton btnSearch;
     private javax.swing.JButton btnUpdate;
+    private javax.swing.JComboBox<String> cbbFilterStatus;
     private javax.swing.JComboBox<String> cbbTrangThai;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
@@ -466,27 +543,27 @@ public class XuatXuView extends javax.swing.JFrame {
     private javax.swing.JLabel lblNumberOfPage;
     private javax.swing.JLabel lblPages;
     private javax.swing.JTable tblXuatXu;
-    private javax.swing.JTextField txtLoc;
     private javax.swing.JTextField txtTimKiem;
     private javax.swing.JTextField txtXuatXu;
     // End of variables declaration//GEN-END:variables
 
-    private XuatXuDao dao = new XuatXuDao();
-    private List<XuatXu> list = dao.selectAll();
+    private final XuatXuDao dao = new XuatXuDao();
+    private final List<XuatXu> list = dao.selectAll();
     private int page = 1;
-    private final int limit = 2;
+    private final int limit = 4;
     private int numberOfPages;
-    private int row;
+    private int row = -1;
+    private int check;
 
     private void init() {
         this.setLocationRelativeTo(null);
         this.fillComboBox();
+        this.fillComboBoxFilter();
         this.fillTable(page);
-
-        if (list.size() % 2 == 0) {
-            numberOfPages = list.size() / 2;
+        if (list.size() % limit == 0) {
+            numberOfPages = list.size() / limit;
         } else {
-            numberOfPages = (list.size() / 2) + 1;
+            numberOfPages = (list.size() / limit) + 1;
         }
 
         lblPages.setText("1");
@@ -496,14 +573,28 @@ public class XuatXuView extends javax.swing.JFrame {
     private void fillComboBox() {
         DefaultComboBoxModel model = (DefaultComboBoxModel) cbbTrangThai.getModel();
         model.removeAllElements();
-        
-        List<XuatXu> listCbb = dao.selectAll();
-        for (XuatXu xuatXu : listCbb) {
-            model.addElement(xuatXu);
+
+        List<XuatXu> listXX = dao.selectAll();
+        Set<String> liSet = new HashSet<>();
+
+        for (XuatXu xuatXu : listXX) {
+            liSet.add(xuatXu.showStatu());
+        }
+        for (String statu : liSet) {
+            model.addElement(statu);
         }
     }
 
     private void fillTable(int page) {
+        List<XuatXu> list = dao.selectAll();
+        if (list.size() % limit == 0) {
+            numberOfPages = list.size() / limit;
+        } else {
+            numberOfPages = (list.size() / limit) + 1;
+        }
+
+        lblNumberOfPage.setText("1/" + numberOfPages);
+
         DefaultTableModel model = (DefaultTableModel) tblXuatXu.getModel();
         model.setRowCount(0);
 
@@ -512,7 +603,7 @@ public class XuatXuView extends javax.swing.JFrame {
             model.addRow(new Object[]{
                 xx.getId(),
                 xx.getName(),
-                xx.getStatus() ? "Đang hoạt động" : "Vô hiệu hóa"
+                xx.showStatu()
             });
         }
     }
@@ -525,8 +616,7 @@ public class XuatXuView extends javax.swing.JFrame {
     }
 
     private void nextPage() {
-        int pageCount = (int) Math.ceil((double) list.size() / limit);
-        if (page < pageCount) {
+        if (page < numberOfPages) {
             page++;
             this.fillTable(page);
             lblPages.setText("" + page);
@@ -553,22 +643,151 @@ public class XuatXuView extends javax.swing.JFrame {
     private void setForm(XuatXu xx) {
         lblID.setText(String.valueOf(xx.getId()));
         txtXuatXu.setText(xx.getName());
-        cbbTrangThai.setSelectedItem(xx.getStatus());
+        cbbTrangThai.setSelectedItem(xx.showStatu());
     }
 
     private XuatXu getForm() {
         XuatXu xx = new XuatXu();
 
         xx.setName(txtXuatXu.getText());
-        xx.setStatus((Boolean) cbbTrangThai.getSelectedItem());
+        String trangThai = (String) cbbTrangThai.getSelectedItem();
+        Boolean statu = trangThai.equals("Đang hoạt động");
+        xx.setStatus(statu);
 
         return xx;
     }
-    
-    public void edit(){
+
+    private void edit() {
         Integer id = (Integer) tblXuatXu.getValueAt(row, 0);
         XuatXu xx = dao.selectById(id);
         this.setForm(xx);
-        
+    }
+
+    private void clearForm() {
+        XuatXu xx = new XuatXu();
+        this.setForm(xx);
+        this.row = -1;
+    }
+
+    private void insert() {
+        XuatXu xx = this.getForm();
+        try {
+            dao.insert(xx);
+            this.fillTable(page);
+            this.clearForm();
+            JOptionPane.showMessageDialog(this, "Thêm thành công!");
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Thêm thất bại!");
+        }
+    }
+
+    private void update() {
+        XuatXu xx = this.getForm();
+        Integer id = (Integer) tblXuatXu.getValueAt(row, 0);
+        XuatXu xuatXu = dao.selectById(id);
+        xx.setId(xuatXu.getId());
+        try {
+            dao.update(xx);
+            this.fillTable(page);
+            JOptionPane.showMessageDialog(this, "Cập nhập thành công!");
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Cập nhập thất bại!");
+        }
+    }
+
+    private void delete() {
+        try {
+            Integer id = Integer.valueOf(lblID.getText());
+            check = JOptionPane.showConfirmDialog(this, "Bạn thực sự muốn xóa?");
+            if (check != JOptionPane.YES_OPTION) {
+                return;
+            }
+            dao.delete(id);
+            this.fillTable(page);
+            JOptionPane.showMessageDialog(this, "Xóa thành công!");
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Xóa thất bại!");
+        }
+
+        List<XuatXu> list = dao.selectAll();
+        if (list.size() % limit == 0) {
+            numberOfPages = list.size() / limit;
+        } else {
+            numberOfPages = (list.size() / limit) + 1;
+        }
+
+        lblNumberOfPage.setText("1/" + numberOfPages);
+        this.lastPage();
+    }
+
+    private void search() {
+        DefaultTableModel model = (DefaultTableModel) tblXuatXu.getModel();
+        model.setRowCount(0);
+
+        try {
+            String keyWord = txtTimKiem.getText();
+            List<XuatXu> listSearch = dao.searchByKeyWord(keyWord, page, limit);
+
+            if (listSearch.size() % limit == 0) {
+                numberOfPages = listSearch.size() / limit;
+            } else {
+                numberOfPages = (listSearch.size() / limit) + 1;
+            }
+            lblNumberOfPage.setText("1/" + numberOfPages);
+
+            for (XuatXu xx : listSearch) {
+                model.addRow(new Object[]{
+                    xx.getId(),
+                    xx.getName(),
+                    xx.showStatu()
+                });
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Lỗi try vấn dữ liệu");
+        }
+
+    }
+
+    private void fillComboBoxFilter() {
+        DefaultComboBoxModel modelCbb
+                = (DefaultComboBoxModel) cbbFilterStatus.getModel();
+        modelCbb.removeAllElements();
+
+        List<XuatXu> listXX = dao.selectAll();
+        Set<String> liSet = new HashSet<>();
+
+        for (XuatXu xuatXu : listXX) {
+            liSet.add(xuatXu.showStatu());
+        }
+        for (String statu : liSet) {
+            modelCbb.addElement(statu);
+        }
+    }
+
+    private void filter() {
+        DefaultTableModel model = (DefaultTableModel) tblXuatXu.getModel();
+        model.setRowCount(0);
+        try {
+            String trangThai = String.valueOf(cbbFilterStatus.getSelectedItem());
+            Boolean status = trangThai.equals("Đang hoạt động");
+            List<XuatXu> listFilter = dao.searchByStatus(status, page, limit);
+
+            if (listFilter.size() % limit == 0) {
+                numberOfPages = listFilter.size() / limit;
+            } else {
+                numberOfPages = (listFilter.size() / limit) + 1;
+            }
+            lblNumberOfPage.setText("1/" + numberOfPages);
+
+            for (XuatXu xuatXu : listFilter) {
+                model.addRow(new Object[]{
+                    xuatXu.getId(),
+                    xuatXu.getName(),
+                    xuatXu.showStatu()
+                });
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Lỗi try vấn dữ liệu");
+        }
     }
 }
